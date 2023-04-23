@@ -22,14 +22,20 @@ func (s *server) SayHello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloR
 }
 
 func main() {
-	lis, err := net.Listen("tcp", port) // 监听 TCP 端口
+	// 开启端口
+	lis, err := net.Listen("tcp", port)
+	// 如果监听失败，则退出程序并打印错误信息
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err) // 如果监听失败，则退出程序并打印错误信息
+		log.Fatalf("failed to listen: %v", err)
 	}
-	s := grpc.NewServer()                  // 创建一个 gRPC 服务实例
-	pb.RegisterGreeterServer(s, &server{}) // 注册服务，把实现服务的 server 结构体绑定到 gRPC 服务实例中
+	// 创建一个 gRPC 服务实例
+	s := grpc.NewServer()
+	// 注册服务，把实现服务的 server 结构体绑定到 gRPC 服务实例中
+	pb.RegisterGreeterServer(s, &server{})
 	log.Printf("start gRPC server on port %s\n", port)
-	if err := s.Serve(lis); err != nil { // 开始监听
-		log.Fatalf("failed to serve: %v", err) // 开始监听，如果监听失败，则退出程序并打印错误信息
+	// .Server启动服务，监听lis
+	// 如果监听失败，则退出程序并打印错误信息
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
 	}
 }
